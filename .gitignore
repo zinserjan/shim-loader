@@ -8,3 +8,7 @@ npm-debug.log
 # project
 .tmp
 lib
+
+# coverage
+.nyc_output
+coverage
