@@ -1,4 +1,4 @@
-import { parseQuery } from 'loader-utils';
+import { getCurrentRequest, parseQuery } from 'loader-utils';
 import transform from '../transform';
 
 function getShim(loaderContext) {
@@ -19,17 +19,24 @@ function getShim(loaderContext) {
 }
 
 // Ensure compatibility with CommonJS
-module.exports = function shimLoader(source) {
+module.exports = function shimLoader(code, sourcemap) {
   // cacheable loader
   this.cacheable();
 
   const shim = getShim(this);
 
   if (typeof shim !== 'undefined') {
-    const newSource = transform(source, shim.deps, shim.exports);
-    return newSource;
-  } else {
-    return source;
+		const file = getCurrentRequest(this);
+    const result = transform(code, sourcemap, file, shim.deps, shim.exports);
+
+		this.callback(null, result.source, result.map);
+		return;
   }
 
+	if (sourcemap) {
+		this.callback(null, code, sourcemap);
+		return;
+	}
+
+  return code;
 };

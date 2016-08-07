@@ -7,6 +7,42 @@ import webpack from 'webpack';
 import WebpackShim from '../src/WebpackShim';
 
 
+function testWebpack(webpackConfig, bundlePath, assertions, done) {
+  webpack(webpackConfig, function(err, stats) {
+    if (err) {
+      return done(err);
+    }
+
+    const jsonStats = stats.toJson({colors: true});
+    if (jsonStats.errors.length > 0 || jsonStats.warnings.length > 0) {
+      console.log(stats.toString({
+        colors: true,
+      }));
+    }
+
+    const exists = fs.existsSync(bundlePath);
+
+    assert.ok(exists, 'Compiled bundle should exist');
+
+    const code = fs.readFileSync(bundlePath, 'utf-8');
+
+    const ctx = {
+      window: {},
+      console: console
+    };
+    ctx.self = ctx.window;
+    ctx.window = ctx;
+
+    const fn = vm.runInNewContext(code, ctx);
+
+    assertions(fn, ctx);
+
+    // give a free pass to compilation that generated an error
+    process.nextTick(done);
+  });
+}
+
+
 describe('Shim Test Cases', function() {
   const casesPath = path.join(__dirname, 'shimCases');
   const tmpPath = path.join('.tmp', 'shimCases');
@@ -28,20 +64,25 @@ describe('Shim Test Cases', function() {
 
     describe(testCase.name, function() {
 
-      it(`should compile & work as expected`, function(done) {
+      const assertions = require(path.join(testDirectory, 'assert.js'));
+
+      const shimConfig = require(path.join(testDirectory, 'config.js'));
+      const shimModules = new WebpackShim(shimConfig);
+
+
+      it(`should compile & work as expected (no devtool)`, function(done) {
         this.timeout(30000);
 
-        const assertions = require(path.join(testDirectory, 'assert.js'));
+        const outputPath = path.join(outputDirectory, 'no-devtool');
 
-        const shimConfig = require(path.join(testDirectory, 'config.js'));
-        const shimModules = new WebpackShim(shimConfig);
+        const bundlePath = path.join(outputPath, bundleName);
 
         const webpackConfig = {
           context: testDirectory,
           entry: './index.js',
           // target: 'async-node',
           output: {
-            path: outputDirectory,
+            path: outputPath,
             filename: bundleName,
             chunkFilename: `[id].${bundleName}`,
           },
@@ -52,43 +93,80 @@ describe('Shim Test Cases', function() {
             loaders: [
               shimModules.loader()
             ]
-          }
+          },
         };
 
-        webpack(webpackConfig, function(err, stats) {
-          if (err) {
-            return done(err);
-          }
+        testWebpack(webpackConfig, bundlePath, assertions, done);
 
-          const jsonStats = stats.toJson({colors: true});
-          if (jsonStats.errors.length > 0 || jsonStats.warnings.length > 0) {
-            console.log(stats.toString({
-              colors: true,
-            }));
-          }
+      });
 
-          const bundlePath = path.join(outputDirectory, bundleName);
-          const exists = fs.existsSync(bundlePath);
+      it(`should compile & work as expected (with sourcemap)`, function(done) {
+        this.timeout(30000);
 
-          assert.ok(exists, 'Compiled bundle should exist');
+        const outputPath = path.join(outputDirectory, 'devtool-sourcemap');
 
-          const code = fs.readFileSync(bundlePath, 'utf-8');
+        const bundlePath = path.join(outputPath, bundleName);
 
-          const ctx = {
-            window: {},
-            console: console
-          };
-          ctx.self = ctx.window;
-          ctx.window = ctx;
+        const webpackConfig = {
+          context: testDirectory,
+          entry: './index.js',
+          // target: 'async-node',
+          output: {
+            path: outputPath,
+            filename: bundleName,
+            chunkFilename: `[id].${bundleName}`,
+          },
+          resolve: {
+            alias: shimModules.alias(),
+          },
+          module: {
+            loaders: [
+              shimModules.loader()
+            ]
+          },
+          devtool: '#source-map',
+        };
 
-          const fn = vm.runInNewContext(code, ctx);
+        testWebpack(webpackConfig, bundlePath, assertions, done);
 
-          assertions(fn, ctx);
+      });
 
-          // give a free pass to compilation that generated an error
-          process.nextTick(done);
-        });
+      it(`should compile & work as expected (with loader & devtool source-map)`, function(done) {
+        this.timeout(30000);
 
+        const outputPath = path.join(outputDirectory, 'devtool-source-map-with-loader');
+        const bundlePath = path.join(outputPath, bundleName);
+
+        const webpackConfig = {
+          context: testDirectory,
+          entry: './index.js',
+          // target: 'async-node',
+          output: {
+            path: outputPath,
+            filename: bundleName,
+            chunkFilename: `[id].${bundleName}`,
+          },
+          resolve: {
+            alias: shimModules.alias(),
+          },
+          module: {
+            loaders: [
+              shimModules.loader(),
+              {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel-loader', // 'babel-loader' is also a legal name to reference
+                query: {
+                  babelrc: false,
+                  presets: ['es2015-script'] // in order to run tests
+                }
+              }
+            ]
+          },
+          devtool: '#source-map',
+        };
+
+        testWebpack(webpackConfig, bundlePath, assertions, done);
       });
     });
   });
