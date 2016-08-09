@@ -1,8 +1,8 @@
 {
-  "name": "webpack-shim",
+  "name": "webpack-shim-loader",
   "version": "0.0.1",
   "description": "",
-  "main": "lib/WebpackShim.js",
+  "main": "lib/shimLoader.js",
   "files": [
     "*.md",
     "src",

@@ -4,7 +4,7 @@ import vm from 'vm';
 import assert from 'assert';
 import webpack from 'webpack';
 
-import WebpackShim from '../src/WebpackShim';
+const shimLoaderPath = require.resolve('../src/shimLoader');
 
 
 function testWebpack(webpackConfig, bundlePath, assertions, done) {
@@ -67,8 +67,6 @@ describe('Shim Test Cases', function() {
       const assertions = require(path.join(testDirectory, 'assert.js'));
 
       const shimConfig = require(path.join(testDirectory, 'config.js'));
-      const shimModules = new WebpackShim(shimConfig);
-
 
       it(`should compile & work as expected (no devtool)`, function(done) {
         this.timeout(30000);
@@ -87,13 +85,17 @@ describe('Shim Test Cases', function() {
             chunkFilename: `[id].${bundleName}`,
           },
           resolve: {
-            alias: shimModules.alias(),
+            alias: shimConfig.paths,
           },
           module: {
             loaders: [
-              shimModules.loader()
+              {
+                test: /\.js/,
+                loader: shimLoaderPath,
+                query: shimConfig,
+              }
             ]
-          },
+          }
         };
 
         testWebpack(webpackConfig, bundlePath, assertions, done);
@@ -117,11 +119,15 @@ describe('Shim Test Cases', function() {
             chunkFilename: `[id].${bundleName}`,
           },
           resolve: {
-            alias: shimModules.alias(),
+            alias: shimConfig.paths,
           },
           module: {
             loaders: [
-              shimModules.loader()
+              {
+                test: /\.js/,
+                loader: shimLoaderPath,
+                query: shimConfig,
+              }
             ]
           },
           devtool: '#source-map',
@@ -147,11 +153,15 @@ describe('Shim Test Cases', function() {
             chunkFilename: `[id].${bundleName}`,
           },
           resolve: {
-            alias: shimModules.alias(),
+            alias: shimConfig.paths,
           },
           module: {
             loaders: [
-              shimModules.loader(),
+              {
+                test: /\.js/,
+                loader: shimLoaderPath,
+                query: shimConfig,
+              },
               {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
