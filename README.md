@@ -1,6 +1,6 @@
-# webpack-shim-loader
+# shim-loader
 
-webpack-shim-loader makes traditional/legacy "browser globals" scripts compatible with webpack's module system. Based on the idea of [RequireJS](http://requirejs.org/docs/api.html#config-shim) and [browserify-shim](https://github.com/thlorenz/browserify-shim).
+shim-loader makes traditional/legacy "browser globals" scripts compatible with webpack's module system. Based on the idea of [RequireJS](http://requirejs.org/docs/api.html#config-shim) and [browserify-shim](https://github.com/thlorenz/browserify-shim).
 
 Shimming in webpack is already possible with [complicated configurations](https://github.com/webpack/docs/wiki/shimming-modules). Now it's easy!
 
@@ -15,16 +15,16 @@ Shimming in webpack is already possible with [complicated configurations](https:
 You should use this only when you have to use libraries that are incompatible with your desired module definition style or when you want to upgrade a legacy project to the present.
 
 ## How does it work?
-webpack-shim-loader is a webpack loader that transforms the code in a way that it works in the webpack environment. It's nearly the same as doing this manually with [imports-loader](https://github.com/webpack/imports-loader) and [exports-loader](https://github.com/webpack/exports-loader).
+shim-loader is a webpack loader that transforms the code in a way that it works in the webpack environment. It's nearly the same as doing this manually with [imports-loader](https://github.com/webpack/imports-loader) and [exports-loader](https://github.com/webpack/exports-loader).
 
 ## Installation
 
 ```bash
 
-$ npm install webpack-shim-loader
+$ npm install shim-loader --save-dev
 
 ```
-Install webpack-shim-loader via npm and add the loader to your webpack config.
+Install shim-loader via npm and add the loader to your webpack config.
 
 
 ## Configuration
@@ -102,7 +102,7 @@ module.exports = {
       {
         // apply the loader to setup module shimming
         test: /\.js/
-        loader: 'webpack-shim-loader',
+        loader: 'shim-loader',
         query: webpackShimConfig,
         // pass a list of directories or files to improve performance
         includes:  path.join(__dirname, 'bower_components'),

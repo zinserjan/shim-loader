@@ -1,5 +1,5 @@
 {
-  "name": "webpack-shim-loader",
+  "name": "shim-loader",
   "version": "0.0.1",
   "description": "",
   "main": "lib/shimLoader.js",
