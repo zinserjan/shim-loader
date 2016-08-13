@@ -1,19 +1,18 @@
-// import { SourceNode, SourceMapConsumer, } from 'source-map';
 import { ConcatSource, OriginalSource, RawSource, SourceMapSource } from 'webpack-sources';
 
-import bindWindowWithExports from './bindWindowWithExports';
-import bindWindowWithoutExports from './bindWindowWithoutExports';
+import bindCode from './bindCode';
 import moduleExport from './moduleExport';
 import provideDependencies from './provideDependencies';
+import determineShimOptions from './determineShimOptions';
 
 
-export default function transform(code, sourcemap, file, deps, exported) {
+export default function transform(requestedModule, code, sourcemap, file, shimConfig) {
+
+  const { deps, exported, context, module, require, define } = determineShimOptions(requestedModule, shimConfig);
 
   const moduleDependencies = provideDependencies(deps);
   const moduleExported = typeof exported !== 'undefined' ? moduleExport(exported) : '';
-  const wrapper = moduleExported === '' ? bindWindowWithoutExports() : bindWindowWithExports();
-
-  let map;
+  const wrapper = bindCode(context, module, module, require, define, !!moduleExported);
 
   const header = [
     moduleDependencies,

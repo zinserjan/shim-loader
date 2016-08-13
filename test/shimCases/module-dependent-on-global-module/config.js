@@ -6,7 +6,8 @@ module.exports = {
   },
   shim: {
     'lodash-identity': {
-      deps: ['lodash:_'] // provide lodahs module as _
+      deps: ['lodash:_'], // provide lodash module as var  _
+      commonjs: true, // allow commonjs module style
     }
   }
 };

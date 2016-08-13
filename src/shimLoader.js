@@ -10,10 +10,10 @@ function getShim(loaderContext) {
 
   if (typeof shim[moduleName] !== 'undefined') {
     // module name, e.g jquery.ui.position
-    return shim[moduleName];
+    return [moduleName, shim[moduleName]];
   } else if (typeof shim[resourcePath] !== 'undefined') {
     // absolute path to module
-    return shim[resourcePath];
+    return [resourcePath, shim[resourcePath]];
   }
   return undefined;
 }
@@ -26,8 +26,9 @@ module.exports = function shimLoader(code, sourcemap) {
   const shim = getShim(this);
 
   if (typeof shim !== 'undefined') {
+    const [requestedModule, shimConfig] = shim;
 		const file = getCurrentRequest(this);
-    const result = transform(code, sourcemap, file, shim.deps, shim.exports);
+    const result = transform(requestedModule, code, sourcemap, file, shimConfig);
 
 		this.callback(null, result.source, result.map);
 		return;

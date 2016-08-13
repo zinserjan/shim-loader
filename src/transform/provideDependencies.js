@@ -1,4 +1,4 @@
-export default function provideDependencies(deps = []) {
+export default function provideDependencies(deps) {
 
   if (deps.length) {
     const code = deps.map((dep) => {
