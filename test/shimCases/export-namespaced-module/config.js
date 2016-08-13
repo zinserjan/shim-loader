@@ -6,7 +6,7 @@ module.exports = {
   },
   shim: {
     identity: {
-      exports: 'IDENTITY'
+      exports: 'Namespace.IDENTITY'
     }
   }
 };
