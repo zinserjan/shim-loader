@@ -1,5 +1,5 @@
 
-global.IDENTITY = (function() {
+IDENTITY = (function() {
   return function (str) {
     return str;
   }

@@ -1,5 +1,5 @@
 
-global.IDENTITY = (function() {
+window.IDENTITY = (function() {
   return function (str) {
     return str;
   }
