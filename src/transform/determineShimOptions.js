@@ -26,6 +26,9 @@ export default function determineShimOptions(moduleFile, shimConfig) {
     precond.checkIsBoolean(amd, `amd for module '${moduleFile}' must be an boolean`);
   }
 
+  precond.checkState(!(typeof exported !== 'undefined' && amd), `exports option for module '${moduleFile}' is not compatible with activated amd flag. Make sure that you either use global or AMD module style.`);
+  precond.checkState(!(typeof exported !== 'undefined' && commonjs), `exports option '${moduleFile}' is not compatible with activated commonjs flag. Make sure that you either use global or CommonJS module style.`);
+
   const module = !exported && !deps.length && typeof commonjs === 'undefined' || !!commonjs;
   const require = module;
   const define = !exported && !deps.length && typeof amd === 'undefined' || amd;
