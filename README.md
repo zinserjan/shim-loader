@@ -79,6 +79,10 @@ var webpackShimConfig = {
           'jquery.ui.core', // just make sure that jquery.ui.core is loaded before
         ]
     }
+  },
+  'masonry': {
+      amd: false // disable AMD module style
+      commonjs: true // and use CommonJS module style instead
   }
 };
 
