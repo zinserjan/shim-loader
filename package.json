@@ -1,7 +1,7 @@
 {
   "name": "shim-loader",
   "version": "0.0.1",
-  "description": "",
+  "description": "makes traditional/legacy scripts compatible with webpack",
   "main": "lib/shimLoader.js",
   "files": [
     "*.md",
@@ -15,6 +15,18 @@
     "test": "npm run clean-tmp && mocha --timeout 2000 --compilers js:babel-register test/test.js",
     "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zinserjan/shim-loader"
+  },
+  "bugs": {
+    "url": "https://github.com/zinserjan/shim-loader/issues"
+  },
+  "keywords": [
+    "webpack",
+    "shim",
+    "loader"
+  ],
   "author": "Jan-André Zinser",
   "license": "MIT",
   "devDependencies": {
