@@ -1,4 +1,4 @@
-# shim-loader
+# shim-loader [![Build Status](https://travis-ci.org/zinserjan/shim-loader.svg?branch=travis)](https://travis-ci.org/zinserjan/shim-loader) [![codecov](https://codecov.io/gh/zinserjan/shim-loader/branch/master/graph/badge.svg)](https://codecov.io/gh/zinserjan/shim-loader)
 
 shim-loader makes traditional/legacy "browser globals" scripts compatible with webpack's module system. Based on the idea of [RequireJS](http://requirejs.org/docs/api.html#config-shim) and [browserify-shim](https://github.com/thlorenz/browserify-shim).
 
