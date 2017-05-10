@@ -1,14 +1,13 @@
 sudo: false
 language: node_js
 node_js:
-  - "0.12"
   - "4"
   - "5"
   - "6"
 
 env:
   - WEBPACK_VERSION=1
-  - WEBPACK_VERSION=beta
+  - WEBPACK_VERSION=2
 
 matrix:
   fast_finish: true

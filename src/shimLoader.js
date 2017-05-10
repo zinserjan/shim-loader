@@ -1,8 +1,8 @@
-import { getCurrentRequest, parseQuery } from 'loader-utils';
+import { getCurrentRequest, getOptions } from 'loader-utils';
 import transform from './transform';
 
 function getShim(loaderContext) {
-	const query = parseQuery(loaderContext.query);
+  const query = Object.assign({}, getOptions(loaderContext));
   const shim = query.shim || {};
 
   const moduleName = loaderContext._module.rawRequest;

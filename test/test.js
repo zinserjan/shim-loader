@@ -45,7 +45,7 @@ function testWebpack(webpackConfig, bundlePath, assertions, done) {
 
 describe('Shim Test Cases', function() {
   const casesPath = path.join(__dirname, 'shimCases');
-  const tmpPath = path.join('.tmp', 'shimCases');
+  const tmpPath = path.resolve('.tmp', 'shimCases');
   const bundleName = 'bundle.js';
 
 
