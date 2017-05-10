@@ -1,6 +1,6 @@
 {
   "name": "shim-loader",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "makes traditional/legacy scripts compatible with webpack",
   "main": "lib/shimLoader.js",
   "files": [
