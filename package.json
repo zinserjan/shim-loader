@@ -13,7 +13,8 @@
     "clean-tmp": "del-cli \".tmp/**\"",
     "build": "npm run clean-lib && babel ./src -d lib",
     "test": "npm run clean-tmp && mocha --timeout 2000 --compilers js:babel-register test/test.js",
-    "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test"
+    "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
